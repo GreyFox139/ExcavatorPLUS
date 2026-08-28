@@ -8,7 +8,7 @@ from PyQt6.QtGui import QPalette, QFont
 
 from config import (
     F_Big_B, F_Nrm, F_Sml, 
-    CHECKBOX_STYLE, RADIO_STYLE, 
+    CHECKBOX_STYLE, RADIO_STYLE, TAB_STYLE_4,
     ZKS_BLAGO_DB, COMPANY_LIMITS, PRIORITY
 )
 from gui.gui_dialog_window import show_success_message, show_warning_message
@@ -52,6 +52,7 @@ class CloseWindow(QDialog):
         # 2. Область вкладок по организациям
         self.tabs = QTabWidget(self)
         self.tabs.setFont(F_Sml)
+        self.tabs.setStyleSheet(TAB_STYLE_4)
         self.tabs.setGeometry(30, 105, 840, 630)
 
         # Создание 4 вкладок
@@ -59,14 +60,6 @@ class CloseWindow(QDialog):
         self.tab_zks = QWidget()
         self.tab_drs = QWidget()
         self.tab_hzs = QWidget()
-
-        # Принудительная установка единого серого фона для всех страниц через палитру
-        bg_color = self.palette().color(QPalette.ColorRole.Window)
-        for tab in (self.tab_adm, self.tab_zks, self.tab_drs, self.tab_hzs):
-            tab.setAutoFillBackground(True)
-            pal = tab.palette()
-            pal.setColor(QPalette.ColorRole.Window, bg_color)
-            tab.setPalette(pal)
 
         self.tabs.addTab(self.tab_adm, "Администрация")
         self.tabs.addTab(self.tab_zks, "Житлокомсервис")

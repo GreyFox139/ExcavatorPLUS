@@ -1,5 +1,4 @@
 import os
-from config import OUTPUT_DIR
 from utility.print_docx import print_batch_docx
 
 

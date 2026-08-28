@@ -1,8 +1,16 @@
 import os
+import sys
+import json
 from PyQt6.QtGui import QFont
 
 # --- Пути к ресурсам ---
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Автоматическое определение корневой папки (для .py и для .exe)
+if getattr(sys, 'frozen', False):
+    # Если запущен скомпилированный .exe (PyInstaller)
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    # Если запущен обычный .py скрипт
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ICON_PATH = os.path.join(BASE_DIR, "icon.ico")
 OUTPUT_DIR = os.path.join(BASE_DIR, "output_temp")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -95,82 +103,24 @@ SHURF_MAP = {
     }
 }
 
-ZKS_BLAGO_DB = {
-    30: {
-        "jks_fio": "М.М. Масіч",
-        "blago_units": [
-            {"num": "1", "fio": "С.В. Колесник"},
-            {"num": "2", "fio": "Л.В. Цеменко"},
-        ]
-    },
-    31: {
-        "jks_fio": "С.П. Ляшенко",
-        "blago_units": [
-            {"num": "5", "fio": "О.В. Петрук"}
-        ]
-    },
-    32: {
-        "jks_fio": "Н.І. Долгова",
-        "blago_units": [
-            {"num": "7", "fio": "С.Є. Ільєнко"}
-        ]
-    },
-    33: {
-        "jks_fio": "Л.М. Кулабухова",
-        "blago_units": [
-            {"num": "6", "fio": "О.В. Калашников"}
-        ]
-    },
-    34: {
-        "jks_fio": "П.О. Воронцов",
-        "blago_units": [
-            {"num": "3", "fio": "Є.Б. Волинчик"}
-        ]
-    },
-    35: {
-        "jks_fio": "Т.І. Шелепіна",
-        "blago_units": [
-            {"num": "4", "fio": "Б.В. Фартушний"}
-        ]
-    },
-    36: {
-        "jks_fio": "Д.В. Андрукович",
-        "blago_units": [
-            {"num": "9", "fio": "Т.В. Краченко"}
-        ]
-    },
-    37: {
-        "jks_fio": "О.І. Головчанська",
-        "blago_units": [
-            {"num": "10", "fio": "О.А. Перетяченко"}
-        ]
-    },
-    38: {
-        "jks_fio": "А.С. Кріпінєвич",
-        "blago_units": [
-            {"num": "11", "fio": "С.В. Косенко"}
-        ]
-    },
-    39: {
-        "jks_fio": "А.О. Демидюк",
-        "blago_units": [
-            {"num": "12", "fio": "О.І. Овечко"}
-        ]
-    },
-    40: {
-        "jks_fio": "О.В. Босенко",
-        "blago_units": [
-            {"num": "10", "fio": "О.А. Перетяченко"}
-        ]
-    },
-    41: {
-        "jks_fio": "С.Ю. Шиндель",
-        "blago_units": [
-            {"num": "8", "fio": "І.В. Семененко"}
-        ]
-    },
-}
+# --- Подключение базы данных начальников участко ЖКС и ХБУ
+# Путь к файлу базы данных
+ZKS_DB_PATH = os.path.join(BASE_DIR, "data", "zks_blago_db.json")
+# Метод загрузки данных
+def load_zks_blago_db():
+    if os.path.exists(ZKS_DB_PATH):
+        try:
+            with open(ZKS_DB_PATH, "r", encoding="utf-8") as f:
+                raw_data = json.load(f)
+                return {int(k): v for k, v in raw_data.items()}
+        except Exception as e:
+            print(f"Ошибка чтения zks_blago_db.json: {e}")
+    return {}
+# Динамическая база данных
+ZKS_BLAGO_DB = load_zks_blago_db()
 
+# --- Стили для виджетов ---
+# Стиль для QCheckBox
 CHECKBOX_STYLE = """
     QCheckBox::indicator {
         width: 28px;
@@ -193,7 +143,7 @@ CHECKBOX_STYLE = """
         background-color: #e0e0e0;
     }
 """
-
+# Стиль для QRadioButton
 RADIO_STYLE = """
     QRadioButton::indicator {
         width: 28px;
@@ -216,7 +166,7 @@ RADIO_STYLE = """
         background-color: #e0e0e0;
     }
 """
-
+# Стиль для QTabWidget
 TAB_STYLE = """
     /* Внешняя граница внутренней панели */
     QTabWidget::pane {
@@ -227,6 +177,35 @@ TAB_STYLE = """
     /* Ярлыки вкладок на всю ширину (840px / 4 = 210px) */
     QTabBar::tab {
         width: 378px;
+        height: 38px;
+        background-color: #D6D6D6;
+        border: 1px solid #8F8F8F;
+        border-bottom: none;
+    }
+
+    /* Активная вкладка */
+    QTabBar::tab:selected {
+        background-color: #E8E8E8;
+        border-bottom: 2px solid #E8E8E8;
+        font-weight: bold;
+    }
+
+    /* Наведение на неактивную вкладку */
+    QTabBar::tab:hover:!selected {
+        background-color: #C5C5C5;
+    }
+"""
+# Стиль для QTabWidget с 4 вкладками
+TAB_STYLE_4 = """
+    /* Внешняя граница внутренней панели */
+    QTabWidget::pane {
+        border: 2px solid #8F8F8F;
+        top: -1px;
+    }
+
+    /* Ярлыки вкладок на всю ширину (840px / 4 = 210px) */
+    QTabBar::tab {
+        width: 208;
         height: 38px;
         background-color: #D6D6D6;
         border: 1px solid #8F8F8F;
