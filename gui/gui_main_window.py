@@ -136,7 +136,7 @@ class MainWindow(QMainWindow):
         """)
         btn_exit.clicked.connect(self.close)
 
-        version_label = QLabel("ver. 1.0.1")
+        version_label = QLabel("ver. 1.0.3")
         version_label.setFont(F_Tiny)
         version_label.setStyleSheet("color: #333333;")
         version_label.setAlignment(Qt.AlignmentFlag.AlignRight)

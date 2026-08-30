@@ -98,7 +98,7 @@ class GuiBlankWindow(QDialog):
         btn_back_layout.addStretch()
         main_layout.addLayout(btn_back_layout)
 
-    # Вспомогательный метод для сборки списка документов во вкладке
+    # Вспомогательный метод для UI и сборки списка документов во вкладке
     def _create_doc_list_tab(self, docs_list: list, with_scroll: bool = False) -> QWidget:
         container = QWidget()
         container_layout = QVBoxLayout(container)
