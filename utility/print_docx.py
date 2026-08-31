@@ -1,9 +1,7 @@
 import win32com.client
 import os
 
-# Метод обращения в MS Word для пакетной печати
 def print_batch_docx(files_info: list):
-    
     word = None
     try:
         word = win32com.client.Dispatch("Word.Application")
@@ -21,7 +19,11 @@ def print_batch_docx(files_info: list):
                 ReadOnly=True,
                 AddToRecentFiles=False
             )
-            doc.PrintOut(Background=False, Copies=copies)
+            
+            # Отправляем документ столько раз, сколько указано в copies
+            for _ in range(copies):
+                doc.PrintOut(Background=False)
+
             doc.Close(False)
     except Exception as e:
         print(f"❌ Ошибка пакетной печати MS Word: {e}")

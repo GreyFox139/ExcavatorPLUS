@@ -35,8 +35,8 @@ def process_blank_print(selected_blanks: dict[str, int]):
     """
     files_to_print = []
 
-    for blank_id, copies in selected_blanks.items():
-        if copies < 1:
+    for blank_id, copies_count in selected_blanks.items():
+        if copies_count < 1:
             continue
 
         tpl_path = BLANK_TEMPLATES.get(blank_id)
@@ -45,7 +45,7 @@ def process_blank_print(selected_blanks: dict[str, int]):
             continue
 
         # Бланки не требуют рендеринга в PDF, поэтому печать прямо из шаблона
-        files_to_print.append((tpl_path, copies))
+        files_to_print.append((tpl_path, copies_count))
 
     # Пакетная печать
     if files_to_print:

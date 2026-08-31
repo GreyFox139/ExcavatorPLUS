@@ -224,3 +224,6 @@ TAB_STYLE_4 = """
         background-color: #C5C5C5;
     }
 """
+
+APP_VERSION = "v.1.0.4"
+GITHUB_REPO = "GreyFox139/Project-ORDERS"

@@ -117,9 +117,9 @@ def process_hzs_open(data: dict, selected_docs: dict = None):
         if selected_docs is not None:
             if doc_id not in selected_docs:
                 continue
-            copies = selected_docs[doc_id]
+            copies_count = selected_docs[doc_id]
         else:
-            copies = doc_info["default_copies"]
+            copies_count = doc_info["default_copies"]
 
         tpl_path = doc_info["template"]
         out_path = doc_info["output"]
@@ -130,7 +130,7 @@ def process_hzs_open(data: dict, selected_docs: dict = None):
         tpl = DocxTemplate(tpl_path)
         tpl.render(doc_info["context"])
         tpl.save(out_path)
-        files_to_print.append((out_path, copies))
+        files_to_print.append((out_path, copies_count))
 
     # Пакетная печать
     if files_to_print:

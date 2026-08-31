@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QUrl, QSize
 from PyQt6.QtGui import QIcon, QDesktopServices
 
-from config import ICON_PATH, F_Tiny, F_Nrm, F_Mid, F_Big_B
+from config import ICON_PATH, F_Tiny, F_Nrm, F_Mid, F_Big_B, APP_VERSION
 from gui.gui_open_window import OpenWindow
 from gui.gui_close_window import CloseWindow
 from gui.gui_log_window import LogWindow
@@ -136,7 +136,7 @@ class MainWindow(QMainWindow):
         """)
         btn_exit.clicked.connect(self.close)
 
-        version_label = QLabel("ver. 1.0.3")
+        version_label = QLabel(APP_VERSION)
         version_label.setFont(F_Tiny)
         version_label.setStyleSheet("color: #333333;")
         version_label.setAlignment(Qt.AlignmentFlag.AlignRight)

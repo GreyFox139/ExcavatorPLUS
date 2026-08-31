@@ -280,3 +280,67 @@ def logo_warning_window(logo_path: str, parent=None):
     # Открытие окна предупреждения после окончания анимации
     dialog = WordWarningDialog(parent)
     dialog.exec()
+
+    # Диалог предложения обновиться
+class UpdateAvailableDialog(QDialog):
+    def __init__(self, latest_version: str, current_version: str, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Вышло обновление!")
+        self.setMinimumWidth(460)
+        self.adjustSize()
+        self.setWindowModality(Qt.WindowModality.ApplicationModal)
+
+        if os.path.exists(ICON_PATH):
+            self.setWindowIcon(QIcon(ICON_PATH))
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 25, 25, 15)
+        
+        # Блок значка и текста
+        content_layout = QHBoxLayout()
+        content_layout.setSpacing(15)
+
+        icon_label = QLabel()
+        style = QApplication.style()
+        info_icon = style.standardIcon(QStyle.StandardPixmap.SP_MessageBoxInformation)
+        icon_label.setPixmap(info_icon.pixmap(64, 64))
+        
+        text_label = QLabel(
+            f"Доступна новая версия: {latest_version}\n"
+            f"Текущая версия: {current_version}\n\n"
+            f"Перейти к скачиванию?\n"
+        )
+        text_label.setFont(F_Sml)
+        text_label.setWordWrap(True)
+
+        content_layout.addWidget(icon_label, alignment=Qt.AlignmentFlag.AlignCenter)
+        content_layout.addWidget(text_label, alignment=Qt.AlignmentFlag.AlignCenter)
+
+        layout.addLayout(content_layout)
+        layout.addStretch()
+
+        # Блок кнопок
+        btn_layout = QHBoxLayout()
+        btn_layout.setSpacing(15)
+
+        btn_yes = QPushButton("Давай!")
+        btn_yes.setFont(F_Sml)
+        btn_yes.setFixedSize(160, 35)
+        btn_yes.clicked.connect(self.accept)
+
+        btn_no = QPushButton("Позже")
+        btn_no.setFont(F_Sml)
+        btn_no.setFixedSize(160, 35)
+        btn_no.setDefault(True)
+        btn_no.clicked.connect(self.reject)
+
+        btn_layout.addStretch()
+        btn_layout.addWidget(btn_yes)
+        btn_layout.addWidget(btn_no)
+
+        layout.addLayout(btn_layout)
+
+# Вспомогательный метод вызова окна обновления
+def show_update_dialog(latest_version: str, current_version: str, parent: QWidget = None) -> bool:
+    dialog = UpdateAvailableDialog(latest_version, current_version, parent)
+    return dialog.exec() == QDialog.DialogCode.Accepted

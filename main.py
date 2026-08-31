@@ -2,6 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication
 from gui.gui_main_window import MainWindow
 from gui.gui_dialog_window import logo_warning_window
+from updater import check_for_updates
 
 def main():
     app = QApplication(sys.argv)
@@ -12,6 +13,9 @@ def main():
     # 2. Открываем главное окно программы
     window = MainWindow()
     window.show()
+
+    # 3. Проверяем обновления
+    check_for_updates(window)
     sys.exit(app.exec())
 
 if __name__ == "__main__":
