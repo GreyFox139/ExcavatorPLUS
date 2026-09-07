@@ -17,9 +17,6 @@ class GuiAdmOpenEx(QDialog):
         
         self.order_data = order_data or {}
         
-        if parent:
-            self.setWindowFlags(Qt.WindowType.Window)
-            
         self.setWindowTitle("Выборочная печать — Администрация")
         self.resize(800, 550)
 

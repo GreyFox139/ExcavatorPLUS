@@ -573,21 +573,20 @@ class OpenWindow(QDialog):
             return
         
         current_holder = self.cb_holder.currentText().strip()
-
         order_data = self.collect_data()
 
-        if current_holder in ["Администрация"]:
-            self.adm_ex_window = GuiAdmOpenEx(parent=self, order_data=order_data)
-            self.adm_ex_window.show()
-        elif current_holder in ["Житлокомсервис"]:
-            self.zks_ex_window = GuiZksOpenEx(parent=self, order_data=order_data)
-            self.zks_ex_window.show()
-        elif current_holder in ["Дорремстрой"]:
-            self.drs_ex_window = GuiDrsOpenEx(parent=self, order_data=order_data)
-            self.drs_ex_window.show()
-        elif current_holder in ["Зеленстрой"]:
-            self.hzs_ex_window = GuiHzsOpenEx(parent=self, order_data=order_data)
-            self.hzs_ex_window.show()
+        if current_holder == "Администрация":
+            dialog = GuiAdmOpenEx(parent=self, order_data=order_data)
+            dialog.exec()
+        elif current_holder == "Житлокомсервис":
+            dialog = GuiZksOpenEx(parent=self, order_data=order_data)
+            dialog.exec()
+        elif current_holder == "Дорремстрой":
+            dialog = GuiDrsOpenEx(parent=self, order_data=order_data)
+            dialog.exec()
+        elif current_holder == "Зеленстрой":
+            dialog = GuiHzsOpenEx(parent=self, order_data=order_data)
+            dialog.exec()
 
     # Метод очистки всех полей к дефолтным значениям
     def reset_fields(self):
