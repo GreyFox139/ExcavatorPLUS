@@ -3,6 +3,10 @@ import sys
 import json
 from PyQt6.QtGui import QFont
 
+# --- Настройки для проверки обновления ---
+APP_VERSION = "v.1.0.5"
+GITHUB_REPO = "GreyFox139/Project-ORDERS"
+
 # --- Пути к ресурсам ---
 # Автоматическое определение корневой папки (для .py и для .exe)
 if getattr(sys, 'frozen', False):
@@ -224,6 +228,3 @@ TAB_STYLE_4 = """
         background-color: #C5C5C5;
     }
 """
-
-APP_VERSION = "v.1.0.4"
-GITHUB_REPO = "GreyFox139/Project-ORDERS"
