@@ -1,6 +1,6 @@
 import os
 from docxtpl import DocxTemplate
-from config import SHURF_MAP, OUTPUT_DIR
+from config import SHURF_MAP, OUTPUT_DIR, BASE_DIR
 from utility.print_docx import print_batch_docx
 
 # Метод создания адресной строки
@@ -56,12 +56,10 @@ def process_zks_open(data: dict, selected_docs: dict = None):
     card_date = data.get("card_date", "")
     card_str = f"№ {card_num} від {card_date} р." if card_num else ""
 
-    base_dir = os.path.dirname(os.path.dirname(__file__))
-
     documents_config = [
         {
             "id": "zayava",
-            "template": os.path.join(base_dir, "templates", "open", "zayava.docx"),
+            "template": os.path.join(BASE_DIR, "templates", "open", "zayava.docx"),
             "output": os.path.join(OUTPUT_DIR, "zks_zayava_rendered.docx"),
             "default_copies": 1,
             "context": {
@@ -71,7 +69,7 @@ def process_zks_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "dopka",
-            "template": os.path.join(base_dir, "templates", "open", "zks_dopka.docx"),
+            "template": os.path.join(BASE_DIR, "templates", "open", "zks_dopka.docx"),
             "output": os.path.join(OUTPUT_DIR, "zks_dopka_rendered.docx"),
             "default_copies": 3,
             "context": {
@@ -83,7 +81,7 @@ def process_zks_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "act",
-            "template": os.path.join(base_dir, "templates", "open", "zks_act.docx"),
+            "template": os.path.join(BASE_DIR, "templates", "open", "zks_act.docx"),
             "output": os.path.join(OUTPUT_DIR, "zks_act_rendered.docx"),
             "default_copies": 2,
             "context": {
@@ -94,7 +92,7 @@ def process_zks_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "dogovor",
-            "template": os.path.join(base_dir, "templates", "open", "zks_dogovor.docx"),
+            "template": os.path.join(BASE_DIR, "templates", "open", "zks_dogovor.docx"),
             "output": os.path.join(OUTPUT_DIR, "zks_dogovor_rendered.docx"),
             "default_copies": 1,
             "context": {}

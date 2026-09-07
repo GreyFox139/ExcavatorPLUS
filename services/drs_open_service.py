@@ -1,6 +1,6 @@
 import os
 from docxtpl import DocxTemplate
-from config import SHURF_MAP, OUTPUT_DIR
+from config import SHURF_MAP, OUTPUT_DIR, BASE_DIR
 from utility.print_docx import print_batch_docx
 
 # Методв создания адресной строки
@@ -72,12 +72,10 @@ def process_drs_open(data: dict, selected_docs: dict = None):
         **table_context
     }
 
-    base_dir = os.path.dirname(os.path.dirname(__file__))
-
     documents_config = [
         {
             "id": "zayava",
-            "template": os.path.join(base_dir, "templates", "open", "zayava.docx"),
+            "template": os.path.join(BASE_DIR, "templates", "open", "zayava.docx"),
             "output": os.path.join(OUTPUT_DIR, "drs_zayava_rendered.docx"),
             "default_copies": 1,
             "context": {
@@ -87,7 +85,7 @@ def process_drs_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "dopka",
-            "template": os.path.join(base_dir, "templates", "open", "drs_dopka.docx"),
+            "template": os.path.join(BASE_DIR, "templates", "open", "drs_dopka.docx"),
             "output": os.path.join(OUTPUT_DIR, "drs_dopka_rendered.docx"),
             "default_copies": 3,
             "context": {
@@ -98,14 +96,14 @@ def process_drs_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "f2",
-            "template": os.path.join(base_dir, "templates", "open", "drs_f2.docx"),
+            "template": os.path.join(BASE_DIR, "templates", "open", "drs_f2.docx"),
             "output": os.path.join(OUTPUT_DIR, "drs_f2_rendered.docx"),
             "default_copies": 2,
             "context": f2_context
         },
         {
             "id": "dogovor",
-            "template": os.path.join(base_dir, "templates", "open", "drs_dogovor.docx"),
+            "template": os.path.join(BASE_DIR, "templates", "open", "drs_dogovor.docx"),
             "output": os.path.join(OUTPUT_DIR, "drs_dogovor_rendered.docx"),
             "default_copies": 1,
             "context": {}

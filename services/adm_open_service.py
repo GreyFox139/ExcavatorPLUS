@@ -1,6 +1,6 @@
 import os
 from docxtpl import DocxTemplate
-from config import SHURF_MAP, PRIORITY, OUTPUT_DIR
+from config import SHURF_MAP, PRIORITY, OUTPUT_DIR, BASE_DIR
 from utility.print_docx import print_batch_docx
 
 # Метод создания адресной строки
@@ -61,7 +61,7 @@ def process_adm_open(data: dict, selected_docs: dict = None):
     documents_config = [
         {
             "id": "zayava",
-            "template": "templates/open/zayava.docx",
+            "template": os.path.join(BASE_DIR, "templates", "open", "zayava.docx"),
             "output": os.path.join(OUTPUT_DIR, "zayava_rendered.docx"),
             "default_copies": 1,
             "context": {
@@ -71,7 +71,7 @@ def process_adm_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "act",
-            "template": "templates/open/adm_act.docx",
+            "template": os.path.join(BASE_DIR, "templates", "open", "adm_act.docx"),
             "output": os.path.join(OUTPUT_DIR, "adm_act_rendered.docx"),
             "default_copies": 1,
             "context": {
@@ -80,7 +80,7 @@ def process_adm_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "garant",
-            "template": "templates/open/adm_garant.docx",
+            "template": os.path.join(BASE_DIR, "templates", "open", "adm_garant.docx"),
             "output": os.path.join(OUTPUT_DIR, "adm_garant_rendered.docx"),
             "default_copies": 1,
             "context": {
