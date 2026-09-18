@@ -4,7 +4,7 @@ import json
 from PyQt6.QtGui import QFont
 
 # --- Настройки для проверки обновления ---
-APP_VERSION = "v.1.0.5"
+APP_VERSION = "v.1.0.6"
 GITHUB_REPO = "GreyFox139/Project-ORDERS"
 
 # --- Пути к ресурсам ---
