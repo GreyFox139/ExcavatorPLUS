@@ -510,7 +510,7 @@ class CloseWindow(QDialog):
         self.drs_chk_no_order.setFont(F_Sml)
         self.drs_chk_no_order.setGeometry(550, 50, 260, 35)
         self.drs_chk_no_order.setStyleSheet(CHECKBOX_STYLE)
-        self.drs_chk_no_order.setChecked(False)  # Выключен по умолчанию
+        self.drs_chk_no_order.setChecked(True)
 
         # 2. Блок адреса
         lbl_addr = QLabel("Адрес", parent)

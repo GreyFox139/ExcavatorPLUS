@@ -50,17 +50,19 @@ def process_hzs_open(data: dict, selected_docs: dict = None):
     for idx, s in enumerate(shurfs_list[:3], start=1):
         stype = s.get("type")
         dig_sq = s.get("dig_sq", "")
+        rec_sq = s.get("rec_sq", "")
 
         if not stype or stype == "нет данных":
             continue
 
         name = SHURF_MAP[stype]["full"] if (stype in SHURF_MAP and "full" in SHURF_MAP[stype]) else stype
         sq_str = f"{dig_sq} м²" if dig_sq else ""
+        rec_str = f"{rec_sq} м²" if rec_sq else ""
 
         table_context[f"type{idx}"] = name
         table_context[f"state{idx}"] = "стан добрий"
         table_context[f"area{idx}"] = sq_str
-        table_context[f"rest{idx}"] = sq_str
+        table_context[f"rest{idx}"] = rec_str
 
     f2_context = {
         "address": full_address,
