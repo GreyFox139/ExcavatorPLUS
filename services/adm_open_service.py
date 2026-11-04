@@ -61,6 +61,7 @@ def process_adm_open(data: dict, selected_docs: dict = None):
     documents_config = [
         {
             "id": "zayava",
+            "title": "Заявление",
             "template": os.path.join(BASE_DIR, "templates", "open", "zayava.docx"),
             "output": os.path.join(OUTPUT_DIR, "zayava_rendered.docx"),
             "default_copies": 1,
@@ -71,6 +72,7 @@ def process_adm_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "act",
+            "title": "Акт приёма-передачи",
             "template": os.path.join(BASE_DIR, "templates", "open", "adm_act.docx"),
             "output": os.path.join(OUTPUT_DIR, "adm_act_rendered.docx"),
             "default_copies": 1,
@@ -80,6 +82,7 @@ def process_adm_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "garant",
+            "title": "Гарантийное письмо",
             "template": os.path.join(BASE_DIR, "templates", "open", "adm_garant.docx"),
             "output": os.path.join(OUTPUT_DIR, "adm_garant_rendered.docx"),
             "default_copies": 1,
@@ -106,6 +109,7 @@ def process_adm_open(data: dict, selected_docs: dict = None):
 
         tpl_path = doc_info["template"]
         out_path = doc_info["output"]
+        doc_title = doc_info.get("title", "Документ")
         
         if not os.path.exists(tpl_path):
             continue
@@ -113,7 +117,7 @@ def process_adm_open(data: dict, selected_docs: dict = None):
         tpl = DocxTemplate(tpl_path)
         tpl.render(doc_info["context"])
         tpl.save(out_path)
-        files_to_print.append((out_path, copies_count))
+        files_to_print.append((out_path, copies_count, doc_title))
 
     # Пакетная печать
     if files_to_print:

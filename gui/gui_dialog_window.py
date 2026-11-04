@@ -1,12 +1,13 @@
 import os
+import json
 from PyQt6.QtWidgets import (
-    QDialog, QLabel, QVBoxLayout, QHBoxLayout, 
+    QDialog, QLabel, QVBoxLayout, QHBoxLayout, QCheckBox, QProgressBar,
     QPushButton, QApplication, QStyle, QWidget, QGraphicsOpacityEffect
 )
 from PyQt6.QtCore import Qt, QEventLoop, QPropertyAnimation, QSequentialAnimationGroup, QPauseAnimation
 from PyQt6.QtGui import QIcon, QPixmap
 
-from config import ICON_PATH, F_Sml
+from config import ICON_PATH, F_Sml, CHECKBOX_STYLE
 
 # Диалог подтверждения выхода из программы
 class ConfirmExitDialog(QDialog):
@@ -47,12 +48,12 @@ class ConfirmExitDialog(QDialog):
         btn_yes = QPushButton("Да")
         btn_yes.setFont(F_Sml)
         btn_yes.setFixedSize(180, 35)
+        btn_yes.setDefault(True)
         btn_yes.clicked.connect(self.accept)
 
         btn_no = QPushButton("Нет")
         btn_no.setFont(F_Sml)
         btn_no.setFixedSize(180, 35)
-        btn_no.setDefault(True)
         btn_no.clicked.connect(self.reject)
 
         btn_layout.addStretch()
@@ -60,6 +61,65 @@ class ConfirmExitDialog(QDialog):
         btn_layout.addWidget(btn_no)
 
         layout.addLayout(btn_layout)
+
+# Диалог прогресса печати
+class PrintProgressDialog(QDialog):
+    def __init__(self, max_steps: int, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Печать документов")
+        self.setFixedSize(550, 220)  # Увеличили высоту окна для трех строк текста
+        self.setWindowModality(Qt.WindowModality.ApplicationModal)
+
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowType.WindowCloseButtonHint)
+
+        if os.path.exists(ICON_PATH):
+            self.setWindowIcon(QIcon(ICON_PATH))
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(25, 20, 25, 20)
+        layout.setSpacing(12)
+
+        # Текст состояния
+        self.lbl_status = QLabel("Подготовка к печати...\n\n", self)
+        self.lbl_status.setFont(F_Sml)
+        self.lbl_status.setWordWrap(True)
+        self.lbl_status.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.lbl_status)
+
+        # Прогресс-бар
+        self.progress_bar = QProgressBar(self)
+        self.progress_bar.setFont(F_Sml)
+        self.progress_bar.setRange(0, max_steps)
+        self.progress_bar.setValue(0)
+        self.progress_bar.setFixedHeight(36)
+        self.progress_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(self.progress_bar)
+
+        layout.addStretch()
+
+        # Кнопка отмены
+        btn_layout = QHBoxLayout()
+        self.btn_cancel = QPushButton("Отмена")
+        self.btn_cancel.setFont(F_Sml)
+        self.btn_cancel.setFixedSize(140, 35)
+        self.btn_cancel.clicked.connect(self.reject)
+        
+        btn_layout.addStretch()
+        btn_layout.addWidget(self.btn_cancel)
+        btn_layout.addStretch()
+
+        layout.addLayout(btn_layout)
+
+        self._is_canceled = False
+        self.btn_cancel.clicked.connect(lambda: setattr(self, '_is_canceled', True))
+
+    def update_progress(self, current_step: int, text: str):
+        self.progress_bar.setValue(current_step)
+        self.lbl_status.setText(text)
+        QApplication.processEvents()
+
+    def was_canceled(self) -> bool:
+        return self._is_canceled
 
 # Диалог завершения печати
 class SuccessPrintDialog(QDialog):
@@ -210,6 +270,7 @@ class LogoSplashDialog(QDialog):
     # Метод запуска анимации логотипа
     def start_animation(self):
         self.anim_group.start()
+
 # Окно предупреждения о MS Word
 class WordWarningDialog(QDialog):
     def __init__(self, parent=None):
@@ -247,7 +308,14 @@ class WordWarningDialog(QDialog):
         content_layout.addWidget(text_label, alignment=Qt.AlignmentFlag.AlignCenter)
 
         layout.addLayout(content_layout)
-        layout.addStretch()
+
+        # Чекбокс "Больше не показывать"
+        self.chk_dont_show = QCheckBox("Хватит напоминать, достал!", self)
+        self.chk_dont_show.setFont(F_Sml)
+        self.chk_dont_show.setStyleSheet(CHECKBOX_STYLE)
+        layout.addWidget(self.chk_dont_show)
+
+        layout.addSpacing(10)
 
         # Блок кнопки
         btn_layout = QHBoxLayout()
@@ -262,26 +330,55 @@ class WordWarningDialog(QDialog):
         btn_layout.addWidget(btn_ok)
 
         layout.addLayout(btn_layout)
+
+    # Метод для получения состояния чекбокса
+    def is_dont_show_checked(self) -> bool:
+        return self.chk_dont_show.isChecked()
+    
 # Метод цепочки: Логотип -> Предупреждение
 def logo_warning_window(logo_path: str, parent=None):
     splash = LogoSplashDialog(logo_path, parent)
     splash.show()
     
     loop = QEventLoop()
-    # Закрытие логотип и выход из цикла ожидания сразу после завершения всей цепочки анимации
     splash.anim_group.finished.connect(loop.quit)
-    
-    # Запуска анимацию
     splash.start_animation()
     loop.exec()
-    
     splash.close()
 
-    # Открытие окна предупреждения после окончания анимации
-    dialog = WordWarningDialog(parent)
-    dialog.exec()
+    config_path = os.path.join("data", "app_config.json")
+    show_warning = True
+    
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, "r", encoding="utf-8") as f:
+                config_data = json.load(f)
+                show_warning = config_data.get("show_word_warning", True)
+        except Exception:
+            pass
 
-    # Диалог предложения обновиться
+    if not show_warning:
+        return
+
+    # Открытие окна предупреждения
+    dialog = WordWarningDialog(parent)
+    if dialog.exec() == QDialog.DialogCode.Accepted:
+        if dialog.is_dont_show_checked():
+            try:
+                config_data = {}
+                if os.path.exists(config_path):
+                    with open(config_path, "r", encoding="utf-8") as f:
+                        config_data = json.load(f)
+                
+                config_data["show_word_warning"] = False
+                
+                os.makedirs(os.path.dirname(config_path), exist_ok=True)
+                with open(config_path, "w", encoding="utf-8") as f:
+                    json.dump(config_data, f, ensure_ascii=False, indent=4)
+            except Exception as e:
+                print(f"Не удалось сохранить настройку предупреждения Word: {e}")
+
+# Диалог предложения обновиться
 class UpdateAvailableDialog(QDialog):
     def __init__(self, latest_version: str, current_version: str, parent=None):
         super().__init__(parent)

@@ -75,6 +75,7 @@ def process_adm_close(data: dict, selected_docs: dict = None):
     documents_config = [
         {
             "id": "adm_act",
+            "title": "Акт комиссии",
             "enabled": True,
             "template": os.path.join("templates", "close", "adm_act.docx"),
             "output": os.path.join(OUTPUT_DIR, "adm_act_rendered.docx"),
@@ -90,6 +91,7 @@ def process_adm_close(data: dict, selected_docs: dict = None):
         },
         {
             "id": "f7",
+            "title": "Форма 7",
             "enabled": data.get("chk_form7", False),
             "template": os.path.join("templates", "close", "f7.docx"),
             "output": os.path.join(OUTPUT_DIR, "f7_rendered.docx"),
@@ -102,6 +104,7 @@ def process_adm_close(data: dict, selected_docs: dict = None):
         },
         {
             "id": "rozpiska",
+            "title": "Розписка",
             "enabled": data.get("chk_receipt", False),
             "template": os.path.join("templates", "close", "rozpiska.docx"),
             "output": os.path.join(OUTPUT_DIR, "rozpiska_rendered.docx"),
@@ -118,7 +121,7 @@ def process_adm_close(data: dict, selected_docs: dict = None):
     for doc_info in documents_config:
         doc_id = doc_info["id"]
 
-        # Проверка типа печати для устновки количества копий
+        # Проверка типа печати для установки количества копий
         if selected_docs is not None:
             if doc_id in selected_docs:
                 doc_info["enabled"] = True
@@ -134,6 +137,7 @@ def process_adm_close(data: dict, selected_docs: dict = None):
 
         tpl_path = doc_info["template"]
         out_path = doc_info["output"]
+        doc_title = doc_info.get("title", "Документ")
 
         if not os.path.exists(tpl_path):
             print(f"⚠️ Шаблон не найден: {tpl_path}")
@@ -143,7 +147,7 @@ def process_adm_close(data: dict, selected_docs: dict = None):
         tpl.render(doc_info["context"])
         tpl.save(out_path)
 
-        files_to_print.append((out_path, copies_count))
+        files_to_print.append((out_path, copies_count, doc_title))
 
     # Пакетная печать
     if files_to_print:

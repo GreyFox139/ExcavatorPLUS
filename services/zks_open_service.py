@@ -59,6 +59,7 @@ def process_zks_open(data: dict, selected_docs: dict = None):
     documents_config = [
         {
             "id": "zayava",
+            "title": "Заявление",
             "template": os.path.join(BASE_DIR, "templates", "open", "zayava.docx"),
             "output": os.path.join(OUTPUT_DIR, "zks_zayava_rendered.docx"),
             "default_copies": 1,
@@ -69,6 +70,7 @@ def process_zks_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "dopka",
+            "title": "Доп. соглашение",
             "template": os.path.join(BASE_DIR, "templates", "open", "zks_dopka.docx"),
             "output": os.path.join(OUTPUT_DIR, "zks_dopka_rendered.docx"),
             "default_copies": 3,
@@ -81,6 +83,7 @@ def process_zks_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "act",
+            "title": "Акт соглашения",
             "template": os.path.join(BASE_DIR, "templates", "open", "zks_act.docx"),
             "output": os.path.join(OUTPUT_DIR, "zks_act_rendered.docx"),
             "default_copies": 2,
@@ -92,6 +95,7 @@ def process_zks_open(data: dict, selected_docs: dict = None):
         },
         {
             "id": "dogovor",
+            "title": "Договор",
             "template": os.path.join(BASE_DIR, "templates", "open", "zks_dogovor.docx"),
             "output": os.path.join(OUTPUT_DIR, "zks_dogovor_rendered.docx"),
             "default_copies": 1,
@@ -113,14 +117,15 @@ def process_zks_open(data: dict, selected_docs: dict = None):
 
         tpl_path = doc_info["template"]
         out_path = doc_info["output"]
-        
+        doc_title = doc_info.get("title", "Документ")
+
         if not os.path.exists(tpl_path):
             continue
 
         tpl = DocxTemplate(tpl_path)
         tpl.render(doc_info["context"])
         tpl.save(out_path)
-        files_to_print.append((out_path, copies_count))
+        files_to_print.append((out_path, copies_count, doc_title))
 
     # Пакетная печать
     if files_to_print:

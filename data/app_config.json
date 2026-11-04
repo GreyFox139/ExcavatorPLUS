@@ -1,6 +1,7 @@
 {
-    "is_winter_period": true,
-    "winter_date_green": "2026-08-27",
-    "winter_date_asphalt": "2026-08-27",
-    "rozpiska_text": "зеленої зони на прилеглій території"
+    "is_winter_period": false,
+    "winter_date_green": "2027-04-30",
+    "winter_date_asphalt": "2027-05-15",
+    "rozpiska_text": "зеленої зони на прилеглій території",
+    "show_word_warning": false
 }
