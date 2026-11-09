@@ -75,7 +75,7 @@ def process_adm_open(data: dict, selected_docs: dict = None):
             "title": "Акт приёма-передачи",
             "template": os.path.join(BASE_DIR, "templates", "open", "adm_act.docx"),
             "output": os.path.join(OUTPUT_DIR, "adm_act_rendered.docx"),
-            "default_copies": 1,
+            "default_copies": 2,
             "context": {
                 "address": full_address
             }
